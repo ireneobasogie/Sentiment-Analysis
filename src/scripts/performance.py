@@ -1,5 +1,6 @@
 import numpy as np
-from sklearn.metrics import f1_score
+import torch
+from sklearn.metrics import f1_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 # Task 8: Defining our Performance Metrics
 
 from sklearn.metrics import confusion_matrix
@@ -28,20 +29,69 @@ def accuracy_per_class(preds, labels, label_dict):
 
     return y_true, y_preds
 
+# def get_stats(self, test: pd.DataFrame) -> float:
+#     ''' make predictions on test set + get classification report & confusion matrix '''
 
+#     print('Loading model...')
+#     model = pickle.load(open(self.model_filename, 'rb'))
+
+#     print('Making predictions...')
+#     X_test,y_test = test.doc, test.parti
+#     X_test = self.vectorizer.transform(X_test)
+#     y_pred = model.predict(X_test)
+
+#     labels = model.classes_
+
+#     print('Saving Confusion Matrix...')
+#     cm = confusion_matrix(y_test, y_pred, labels=labels)
+#     plot = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+#     plot.plot()
+#     plt.savefig('eval/confusion_matrix.png')
+
+#     print('Classification report is being sent into eval/classification-report.txt...')
+#     with open('eval/classification-report.txt', 'w') as f:
+#         f.write(f'{classification_report(y_test, y_pred, target_names=labels)}')
+
+#     return model.score(X_test,y_test)
+
+
+# Load the dataset
 df, label_dict = get_df(filepath="/Users/liupan/Desktop/Cours/M2_S2/réseau_de_neurones/project/Sentiment_Analysis/smile-annotations-final.csv")
+print(df)
+
+
+
+
+# Initialize the tokenizer
 tokenizer = tokenizer()
+
+# Encode the dataset
 dataset_train, dataset_val = encode_data(df, tokenizer)
 
-model = BERT_Pretrained_Model(label_dict)
-
 dataloader_train, dataloader_val = Data_loaders(dataset_train, dataset_val)
+
+model = BERT_Pretrained_Model(label_dict)
+model.to("cpu")
+model.load_state_dict(
+    torch.load('/Users/liupan/Desktop/Cours/M2_S2/réseau_de_neurones/Sentiment-Analysis/Bert_ft_epoch10.model',
+              map_location=torch.device('cpu')))
+
 # We want to know if our model is overtraining
 val_loss , predictions, true_vals = evaluate(dataloader_val)
 val_f1 = f1_score_func(predictions, true_vals)
-# tqdm.write(f'Validation loss: {val_loss}')
-# tqdm.write(f'F1 score (weighted): {val_f1}')
-y_true, y_preds = accuracy_per_class(preds, labels, label_dict)
+print(val_f1)
+# # # tqdm.write(f'Validation loss: {val_loss}')
+# # # tqdm.write(f'F1 score (weighted): {val_f1}')
+
+
+result = accuracy_per_class(predictions, true_vals, label_dict)
+print(result)
+
+
+
+
+
+
 def confusion_matrix(y_true, y_pred):
     # Generate some sample data
     # y_true = np.array([0, 1, 2, 0, 1, 2, 0, 1, 2])
