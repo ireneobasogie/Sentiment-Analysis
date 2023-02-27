@@ -2,7 +2,6 @@ import sys
 sys.path.append(".")
 import streamlit as st
 import os
-print(os.getcwd())
 # from scripts.sentiment_analysis import Get_prediction, BERT_Pretrained_Model, tokenizer
 from src.scripts.get_prediction import Get_prediction, load_and_evaluate_our_model
 from src.scripts.model_training import BERT_Pretrained_Model, tokenizer
@@ -15,6 +14,8 @@ if review_text is not None:
     tokenizer = tokenizer()
     label_dict = {'happy': 0, 'not-relevant': 1, 'angry': 2, 'disgust': 3, 'sad': 4, 'surprise': 5}
     model = BERT_Pretrained_Model(label_dict)
+    model.load_state_dict(
+    torch.load('./Bert_ft_epoch10.model', map_location=torch.device('cpu')))
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
