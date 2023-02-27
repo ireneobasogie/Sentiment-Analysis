@@ -56,7 +56,7 @@ def accuracy_per_class(preds, labels, label_dict):
 
 
 # Load the dataset
-df, label_dict = get_df(filepath="/Users/liupan/Desktop/Cours/M2_S2/réseau_de_neurones/project/Sentiment_Analysis/smile-annotations-final.csv")
+df, label_dict = get_df(filepath=r"C:\\Users\\irene\\Uni\\M2\\Arbres, graphes et réseaux\\Sentiment-Analysis\\smile-annotations-final.csv")
 print(df)
 
 
@@ -71,10 +71,9 @@ dataset_train, dataset_val = encode_data(df, tokenizer)
 dataloader_train, dataloader_val = Data_loaders(dataset_train, dataset_val)
 
 model = BERT_Pretrained_Model(label_dict)
-model.to("cpu")
+model.to("cuda")
 model.load_state_dict(
-    torch.load('/Users/liupan/Desktop/Cours/M2_S2/réseau_de_neurones/Sentiment-Analysis/Bert_ft_epoch10.model',
-              map_location=torch.device('cpu')))
+    torch.load(r"C:\\Users\\irene\\Uni\\M2\\Arbres, graphes et réseaux\\Sentiment_Analysis\\Bert_ft_epoch10.model", map_location=torch.device("cuda")))
 
 # We want to know if our model is overtraining
 val_loss , predictions, true_vals = evaluate(dataloader_val)

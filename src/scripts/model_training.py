@@ -1,7 +1,7 @@
 # Loading modules
 import torch
 import pandas as pd
-from tqdm.notebook import tqdm
+from tqdm  import tqdm
 # import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
