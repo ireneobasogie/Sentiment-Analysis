@@ -1,0 +1,7 @@
+streamlit==1.18.1
+scikit-learn==1.2.0
+torch==1.13.1
+tqdm==4.64.1
+transformers==4.25.1
+matplotlib==3.7.0
+watchdog==2.3.0
